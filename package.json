@@ -7,7 +7,17 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js"
   },
-  "author": "Fun117",
+  "author": {
+    "name": "Fun117",
+    "url": "https://fun117.vercel.app/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Fun117/scratch-cloud-logs.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Fun117/scratch-cloud-logs/issues"
+  },
   "license": "ISC",
   "dependencies": {
     "axios": "^1.6.8",

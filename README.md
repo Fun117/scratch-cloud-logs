@@ -1,40 +1,42 @@
 # Scratch Cloud API Logger
 
-このプロジェクトはScratch Cloud APIを使用してクラウド変数の変更をロギングするためのNode.jsスクリプトです。
+This project is a Node.js script designed to log changes to cloud variables using the Scratch Cloud API.
 
-## 概要
+[English](./README.md) / [日本語](./README/ja.md)
 
-このスクリプトは、Scratchのプロジェクトに接続し、クラウド変数の変更をリアルタイムでキャッチしてログに記録します。ログは`cloud.log`ファイルに保存されます。
+## Overview
 
-## 前提条件
+This script connects to a Scratch project and captures real-time changes to cloud variables, logging them to a file named `cloud.log`.
 
-- Node.jsがインストールされていること
-- `config.js` ファイルにプロジェクトIDが設定されていること
+## Prerequisites
 
-## インストール
+- Node.js installed
+- Project ID set in `config.js` file
+
+## Installation
 
 ```bash
 npm install
 ```
 
-# 使用方法
+# Usage
 
-## `config.js` ファイルにプロジェクトIDを設定します。
+## Set your Project ID in `config.js` file.
 ```js
 module.exports = {
     projectId: 'your_project_id_here'
 };
 ```
 
-## スクリプトを実行します。
+## Run the script.
 ```bash
 npm start
 ```
 
-# ログファイル
+# Log File
 
-ログは `cloud.log` ファイルに保存されます。このファイルはGitリポジトリには含まれません。
+Logs are saved to a file named `cloud.log`. This file is not included in the Git repository.
 
-# 注意事項
+# Notes
 
-このスクリプトはScratchのAPIを使用しているため、Scratchの利用規約に従って使用してください。
+This script uses the Scratch API, so please use it in accordance with Scratch's terms of service.
