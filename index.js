@@ -1,12 +1,9 @@
-require('dotenv').config();
+
 const fs = require('fs');
 const Scratch = require("scratch-api");
 const config = require('./config.js');
 
 const axios = require('axios');
-
-// set .env
-const env = process.env;
 
 function formatTime(date) {
     const year = date.getFullYear();
