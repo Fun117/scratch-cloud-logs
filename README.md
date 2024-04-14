@@ -28,7 +28,7 @@ module.exports = {
 
 ## スクリプトを実行します。
 ```bash
-node index.js
+npm start
 ```
 
 # ログファイル
