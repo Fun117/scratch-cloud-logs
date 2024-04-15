@@ -1,9 +1,9 @@
 
 const fs = require('fs');
+const axios = require('axios');
 const Scratch = require("scratch-api");
 const config = require('./config.js');
-
-const axios = require('axios');
+const { CharToNumberGET, NumberToCharGET } = require('./src/CharToNumberGET.js');
 
 function formatTime(date) {
     const year = date.getFullYear();
@@ -33,7 +33,7 @@ Scratch.UserSession.load(function(err, user) {
     Scratch.CloudSession._create(user, config.projectId, async function(err, cloud) {
         if (err) return console.error(err);
 
-        console.log('> Server started. Waiting for cloud data...\n');  // サーバー起動完了のログ
+        console.log('\u001b[38;5;35m> Server started. Waiting for cloud data...\n\u001b[0m');  // サーバー起動完了のログ
 
         const projectId = config.projectId;
         const limit = 10;
@@ -63,12 +63,29 @@ Scratch.UserSession.load(function(err, user) {
             const closestEntry = sortedCloudData.find(entry => entry.value === value);
         
             if (closestEntry) {
-                console.log(`[${currentTime}] ${closestEntry.user} / ${closestEntry.name} : ${value}`);
-                
-                // ログをファイルに追記
-                fs.appendFile('cloud.log', `[${currentTime}] ${closestEntry.user} / ${closestEntry.name} : ${value}\n`, function(err) {
-                    if (err) return console.error('Error writing to log file:', err);
-                });
+                if (closestEntry.name === '☁ chat') {
+                    const decryptedValue = NumberToCharGET('scratch_username', closestEntry.value.substring(0, 20)); // 復号化
+                                
+                    if (closestEntry.user !== decryptedValue) {
+                        console.log(`\u001b[38;5;42m[${currentTime}]\u001b[0m \u001b[38;5;220m[400] \u001b[38;5;208m${decryptedValue} (account: ${closestEntry.user}) / ${closestEntry.name} : ${closestEntry.value}\u001b[0m`);
+                                    
+                        fs.appendFile('cloud.log', `[${currentTime}] [400] ${decryptedValue} (account: ${closestEntry.user}) / ${closestEntry.name} : ${closestEntry.value}\n`, function(err) {
+                            if (err) return console.error('Error writing to log file:', err);
+                        });
+                    } else {
+                        console.log(`\u001b[38;5;42m[${currentTime}]\u001b[0m \u001b[38;5;76m[200]\u001b[0m ${closestEntry.user} / ${closestEntry.name} : ${closestEntry.value}`);
+
+                        fs.appendFile('cloud.log', `[${currentTime}] [200] ${closestEntry.user} / ${closestEntry.name} : ${closestEntry.value}\n`, function(err) {
+                            if (err) return console.error('Error writing to log file:', err);
+                        });
+                    }
+                } else {
+                    console.log(`\u001b[38;5;42m[${currentTime}]\u001b[0m \u001b[38;5;76m[200]\u001b[0m ${closestEntry.user} / ${closestEntry.name} : ${closestEntry.value}`);
+
+                    fs.appendFile('cloud.log', `[${currentTime}] [200] ${closestEntry.user} / ${closestEntry.name} : ${closestEntry.value}\n`, function(err) {
+                        if (err) return console.error('Error writing to log file:', err);
+                    });
+                }
             } else {
                 console.log(`No matching entry found for value: ${value}`);
             }
@@ -78,7 +95,7 @@ Scratch.UserSession.load(function(err, user) {
 
 // プロセスが終了したときにメッセージを出力
 process.on('exit', function() {
-    console.log('Index.js closed. Logs saved to cloud.log.\n');
+    console.log('\u001b[38;5;38mIndex.js closed. Logs saved to cloud.log.\n\u001b[0m');
 });
 
 process.on('SIGINT', function() {

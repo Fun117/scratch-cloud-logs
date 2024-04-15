@@ -40,3 +40,18 @@ Logs are saved to a file named `cloud.log`. This file is not included in the Git
 # Notes
 
 This script uses the Scratch API, so please use it in accordance with Scratch's terms of service.
+
+# Feature List
+
+## Data Monitoring
+You can monitor the communication of cloud data. You can confirm whether the chat information in the building management game has been changed by the user. Currently, only the chat has a user verification feature.
+
+```bash
+npm start
+```
+
+## Chat
+
+```bash
+node src/scratch-building/chat.js <username>
+```
