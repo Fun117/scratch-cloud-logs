@@ -8,7 +8,7 @@
 .env
 
 # logs
-/cloud.log
+/logs/*
 
 # scratch sessions
 .scratchSession

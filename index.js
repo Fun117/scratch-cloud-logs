@@ -1,9 +1,13 @@
 
 const fs = require('fs');
+const path = require('path');
 const axios = require('axios');
 const Scratch = require("scratch-api");
 const config = require('./config.js');
 const { CharToNumberGET, NumberToCharGET } = require('./src/CharToNumberGET.js');
+
+const chatConfigPath = path.join(__dirname, './', 'config', 'selectChat.config.json');
+const chatConfig = JSON.parse(fs.readFileSync(chatConfigPath, 'utf8'));
 
 function formatTime(date) {
     const year = date.getFullYear();
@@ -64,25 +68,34 @@ Scratch.UserSession.load(function(err, user) {
         
             if (closestEntry) {
                 if (closestEntry.name === '☁ chat') {
-                    const decryptedValue = NumberToCharGET('scratch_username', closestEntry.value.substring(0, 20)); // 復号化
-                                
-                    if (closestEntry.user !== decryptedValue) {
-                        console.log(`\u001b[38;5;42m[${currentTime}]\u001b[0m \u001b[38;5;220m[400] \u001b[38;5;208m${decryptedValue} (account: ${closestEntry.user}) / ${closestEntry.name} : ${closestEntry.value}\u001b[0m`);
-                                    
-                        fs.appendFile('cloud.log', `[${currentTime}] [400] ${decryptedValue} (account: ${closestEntry.user}) / ${closestEntry.name} : ${closestEntry.value}\n`, function(err) {
+                    const decryptedValue_username = NumberToCharGET('scratch_username', closestEntry.value.substring(0, 20)); // 復号化
+                    const decryptedValue_chatId = closestEntry.value.substring(40);
+                    const decryptedValue_chatId_ = chatConfig.menuOptions.find(option => option.number === decryptedValue_chatId);
+                    const decryptedValue_chatValue = decryptedValue_chatId_.text;
+
+                    if (closestEntry.user !== decryptedValue_username) {
+                        console.log(`\u001b[38;5;42m[${currentTime}]\u001b[0m \u001b[38;5;220m[400] \u001b[38;5;208m${decryptedValue_username} (account: ${closestEntry.user}) / ${closestEntry.name} : ${closestEntry.value}\u001b[0m`);
+
+                        fs.appendFile('./logs/cloud.log', `[${currentTime}] [400] ${decryptedValue_username} (account: ${closestEntry.user}) / ${closestEntry.name} : ${closestEntry.value}\n`, function(err) {
+                            if (err) return console.error('Error writing to log file:', err);
+                        });
+                        fs.appendFile('./logs/chat.log', `[${currentTime}] [400] ${decryptedValue_username} (account: ${closestEntry.user}) / ${decryptedValue_chatValue}\n`, function(err) {
                             if (err) return console.error('Error writing to log file:', err);
                         });
                     } else {
                         console.log(`\u001b[38;5;42m[${currentTime}]\u001b[0m \u001b[38;5;76m[200]\u001b[0m ${closestEntry.user} / ${closestEntry.name} : ${closestEntry.value}`);
 
-                        fs.appendFile('cloud.log', `[${currentTime}] [200] ${closestEntry.user} / ${closestEntry.name} : ${closestEntry.value}\n`, function(err) {
+                        fs.appendFile('./logs/cloud.log', `[${currentTime}] [200] ${closestEntry.user} / ${closestEntry.name} : ${closestEntry.value}\n`, function(err) {
+                            if (err) return console.error('Error writing to log file:', err);
+                        });
+                        fs.appendFile('./logs/chat.log', `[${currentTime}] [200] ${closestEntry.user} / ${decryptedValue_chatValue}\n`, function(err) {
                             if (err) return console.error('Error writing to log file:', err);
                         });
                     }
                 } else {
                     console.log(`\u001b[38;5;42m[${currentTime}]\u001b[0m \u001b[38;5;76m[200]\u001b[0m ${closestEntry.user} / ${closestEntry.name} : ${closestEntry.value}`);
 
-                    fs.appendFile('cloud.log', `[${currentTime}] [200] ${closestEntry.user} / ${closestEntry.name} : ${closestEntry.value}\n`, function(err) {
+                    fs.appendFile('./logs/cloud.log', `[${currentTime}] [200] ${closestEntry.user} / ${closestEntry.name} : ${closestEntry.value}\n`, function(err) {
                         if (err) return console.error('Error writing to log file:', err);
                     });
                 }
