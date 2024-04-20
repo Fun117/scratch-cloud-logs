@@ -143,7 +143,7 @@ Scratch.UserSession.load(function(err, user) {
                             'warn',
                             currentTime,
                             '400',
-                            `（${closestEntry.user}）`,
+                            `(account: ${closestEntry.user})`,
                             decryptedValue_username,
                             '',
                             decryptedValue_chatValue,
