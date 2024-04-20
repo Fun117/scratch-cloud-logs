@@ -6,12 +6,12 @@ This project is a Node.js script designed to log changes to cloud variables usin
 
 ## Overview
 
-This script connects to a Scratch project and captures real-time changes to cloud variables, logging them to a file named `cloud.log`.
+This script connects to a Scratch project and logs real-time changes to cloud variables. The logs are saved in the `cloud.log` file.
 
 ## Prerequisites
 
 - Node.js installed
-- Project ID set in `config.js` file
+- `config.js` file configured with your project ID
 
 ## Installation
 
@@ -19,7 +19,7 @@ This script connects to a Scratch project and captures real-time changes to clou
 npm install
 ```
 
-# Usage
+# Configuration
 
 ## Set your Project ID in `config.js` file.
 ```js
@@ -28,6 +28,8 @@ module.exports = {
 };
 ```
 
+# Usage
+
 ## Run the script.
 ```bash
 npm start
@@ -35,16 +37,11 @@ npm start
 
 # Log File
 
-Logs are saved to a file named `cloud.log`. This file is not included in the Git repository.
+Logs are saved in the `cloud.log` file. This file is not included in the Git repository.
 
 # Notes
 
-This script uses the Scratch API, so please use it in accordance with Scratch's terms of service.
-
-# Feature List
-
-## Data Monitoring
-You can monitor the communication of cloud data. You can confirm whether the chat information in the building management game has been changed by the user. Currently, only the chat has a user verification feature.
+Please adhere to Scratch's terms of use when using this script, as it utilizes the Scratch API.
 
 ```bash
 npm start
@@ -52,8 +49,23 @@ npm start
 
 # Addons
 
-## Scratch Building / Chat
+## Scratch Building
+
+### Log
+
+You can monitor the communication of cloud data. You can check if the user has modified the chat information in the Scratch Building game. Currently, only the chat has a feature to confirm if the changes were made by the user.
+
+Log: logs/scratch-building.log
+Chat log: logs/scratch-building-chat.log
 
 ```bash
-node ./addons/scratch-building/chat.js <username>
+node addons/scratch-building/logs.js
+```
+
+### Chat
+
+You can chat specifying a username. However, it's not recommended for gameplay, as it cannot confirm if the sender is the actual user. Use this feature responsibly; we are not responsible if you lose access to the game.
+
+```bash
+node addons/scratch-building/chat.js <username>
 ```

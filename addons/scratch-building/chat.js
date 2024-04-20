@@ -29,6 +29,5 @@ SelectChat((selectedMessage) => {
             process.exit(1); // エラー時にもプロンプトを閉じる
         }
     }
-
     run();
 });

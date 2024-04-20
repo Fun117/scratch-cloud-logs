@@ -1,5 +1,5 @@
 const Scratch = require('scratch-api');
-const config = require('../../config.js');
+const config = require('../../_config.js');
 
 async function ScratchCloudSET(key, content) {
     return new Promise((resolve, reject) => {

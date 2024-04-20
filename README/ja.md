@@ -19,7 +19,7 @@
 npm install
 ```
 
-# 使用方法
+# 構成
 
 ## `config.js` ファイルにプロジェクトIDを設定します。
 ```js
@@ -27,6 +27,8 @@ module.exports = {
     projectId: 'your_project_id_here'
 };
 ```
+
+# 使用方法
 
 ## スクリプトを実行します。
 ```bash
@@ -41,17 +43,25 @@ npm start
 
 このスクリプトはScratchのAPIを使用しているため、Scratchの利用規約に従って使用してください。
 
-# 機能一覧
-
-## データ監視
-クラウドデータの通信を確認することが出来ます。ビル経営ゲームのチャットの情報は、本人が変更したかどうかを確認することができます。現在はチャットのみ本人確認機能が対応しています。
-```bash
-npm start
-```
-
 # アドオン
 
-## Scratch Building / チャット
+## Scratch Building
+
+### ログ
+
+クラウドデータの通信を確認することが出来ます。ビル経営ゲームのチャットの情報は、本人が変更したかどうかを確認することができます。現在はチャットのみ本人確認機能が対応しています。
+
+ログ：`logs/scratch-building.log`
+チャットログ：`logs/scratch-building-chat.log`,
+
 ```bash
-node ./addons/scratch-building/chat.js <ユーザー名>
+node addons/scratch-building/logs.js
+```
+
+### チャット
+
+ユーザー名を指定してチャットをすることができます。しかし、ゲーム内では本人かどうかは確認できませんが、送信者が本人なのかは特定することができるため使用をお勧めしません。この機能を使用してゲームのプレイが出来なくなっても出来なくなっても責任は負いません。
+
+```bash
+node addons/scratch-building/chat.js <username>
 ```

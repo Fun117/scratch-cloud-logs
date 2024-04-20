@@ -3,8 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const axios = require('axios');
 const Scratch = require("scratch-api");
-const config = require('./config.js');
-const { CharToNumberGET, NumberToCharGET } = require('./src/CharToNumberGET.js');
+const config = require('./_config.js');
 
 const chatConfigPath = path.join(__dirname, './', 'config', 'selectChat.config.json');
 const chatConfig = JSON.parse(fs.readFileSync(chatConfigPath, 'utf8'));
@@ -27,13 +26,13 @@ async function fetchCloudData(projectId, limit, offset) {
         return response.data;
     } catch (error) {
         if (error.response) {
-            // サーバーからのレスポンスがあるが、2xx ステータスコード以外
+            // Response from server, but other than 2xx status code
             console.error('Error fetching cloud data. Server responded with:', error.response.data);
         } else if (error.request) {
-            // レスポンスがない場合、リクエストが失敗したとき
+            // If there is no response, when the request fails
             console.error('Error fetching cloud data. No response received:', error.request);
         } else {
-            // 何らかのその他のエラーが発生したとき
+            // When some other error occurs
             console.error('Error fetching cloud data:', error.message);
         }
         console.error('Request config:', error.config);
@@ -47,7 +46,12 @@ Scratch.UserSession.load(function(err, user) {
     Scratch.CloudSession._create(user, config.projectId, async function(err, cloud) {
         if (err) return console.error(err);
 
-        console.log('\u001b[38;5;35m> Server started. Waiting for cloud data...\n\u001b[0m');  // サーバー起動完了のログ
+        const nowTime = formatTime(new Date());
+
+        console.log('\u001b[38;5;35m> Server started. Waiting for cloud data...\n\u001b[0m');  // Server startup completion log
+        fs.appendFile(config.file_logs, `> Server started. Waiting for cloud data... | ${nowTime}\n`, function(err) {
+            if (err) return console.error('Error writing to log file:', err);
+        });
 
         const projectId = config.projectId;
         const limit = 10;
@@ -63,52 +67,25 @@ Scratch.UserSession.load(function(err, user) {
         cloud.on('set', async function(name, value) {
             const currentTime = formatTime(new Date());
         
-            // 最新のクラウドデータを取得
+            // Get the latest cloud data
             const cloudData = await fetchCloudData(projectId, limit, offset);
             if (!cloudData) {
                 console.log('Failed to fetch cloud data.');
                 return;
             }
         
-            // タイムスタンプでソート
+            // Sort by timestamp
             const sortedCloudData = cloudData.sort((a, b) => a.timestamp - b.timestamp);
         
-            // 最も近いタイムスタンプのエントリを探す
+            // Find the entry with the closest timestamp
             const closestEntry = sortedCloudData.find(entry => entry.value === value);
         
             if (closestEntry) {
-                if (closestEntry.name === '☁ chat') {
-                    const decryptedValue_username = NumberToCharGET('scratch_username', closestEntry.value.substring(0, 20)); // 復号化
-                    const decryptedValue_chatId = closestEntry.value.substring(40);
-                    const decryptedValue_chatId_ = chatConfig.menuOptions.find(option => option.number === decryptedValue_chatId);
-                    const decryptedValue_chatValue = decryptedValue_chatId_.text;
+                console.log(`\u001b[38;5;42m[${currentTime}]\u001b[0m ${closestEntry.user} / ${closestEntry.name} : ${closestEntry.value}`);
 
-                    if (closestEntry.user !== decryptedValue_username) {
-                        console.log(`\u001b[38;5;42m[${currentTime}]\u001b[0m \u001b[38;5;220m[400] \u001b[38;5;208m${decryptedValue_username} (account: ${closestEntry.user}) / ${closestEntry.name} : ${closestEntry.value}\u001b[0m`);
-
-                        fs.appendFile('./logs/cloud.log', `[${currentTime}] [400] ${decryptedValue_username} (account: ${closestEntry.user}) / ${closestEntry.name} : ${closestEntry.value}\n`, function(err) {
-                            if (err) return console.error('Error writing to log file:', err);
-                        });
-                        fs.appendFile('./logs/chat.log', `[${currentTime}] [400] ${decryptedValue_username} (account: ${closestEntry.user}) / ${decryptedValue_chatValue}\n`, function(err) {
-                            if (err) return console.error('Error writing to log file:', err);
-                        });
-                    } else {
-                        console.log(`\u001b[38;5;42m[${currentTime}]\u001b[0m \u001b[38;5;76m[200]\u001b[0m ${closestEntry.user} / ${closestEntry.name} : ${closestEntry.value}`);
-
-                        fs.appendFile('./logs/cloud.log', `[${currentTime}] [200] ${closestEntry.user} / ${closestEntry.name} : ${closestEntry.value}\n`, function(err) {
-                            if (err) return console.error('Error writing to log file:', err);
-                        });
-                        fs.appendFile('./logs/chat.log', `[${currentTime}] [200] ${closestEntry.user} / ${decryptedValue_chatValue}\n`, function(err) {
-                            if (err) return console.error('Error writing to log file:', err);
-                        });
-                    }
-                } else {
-                    console.log(`\u001b[38;5;42m[${currentTime}]\u001b[0m \u001b[38;5;76m[200]\u001b[0m ${closestEntry.user} / ${closestEntry.name} : ${closestEntry.value}`);
-
-                    fs.appendFile('./logs/cloud.log', `[${currentTime}] [200] ${closestEntry.user} / ${closestEntry.name} : ${closestEntry.value}\n`, function(err) {
-                        if (err) return console.error('Error writing to log file:', err);
-                    });
-                }
+                fs.appendFile(config.file_logs, `[${currentTime}] ${closestEntry.user} / ${closestEntry.name} : ${closestEntry.value}\n`, function(err) {
+                    if (err) return console.error('Error writing to log file:', err);
+                });
             } else {
                 console.log(`No matching entry found for value: ${value}`);
             }
@@ -116,9 +93,16 @@ Scratch.UserSession.load(function(err, user) {
     });
 });
 
-// プロセスが終了したときにメッセージを出力
+// Output message when process terminates
 process.on('exit', function() {
+    const nowTime = formatTime(new Date());
+
     console.log('\u001b[38;5;38mIndex.js closed. Logs saved to cloud.log.\n\u001b[0m');
+    try {
+        fs.appendFileSync(config.file_logs, `> Received SIGINT. Closing server... | ${nowTime}\n\n`);
+    } catch (err) {
+        console.error('Error writing to log file:', err);
+    }
 });
 
 process.on('SIGINT', function() {
