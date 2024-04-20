@@ -32,7 +32,7 @@ function FormatLog(isLog, type, time, status, account, user, name, value,) {
         .replace('{{status}}', status)
         .replace('{{account}}', account)
         .replace('{{user}}', user)
-        .replace('{{name}}', name)
+        .replace('{{name}}', name? `${name} : ` : ``)
         .replace('{{value}}', value);
 
     customFormat = config_myAddon.LogFormat_noColor
@@ -41,7 +41,7 @@ function FormatLog(isLog, type, time, status, account, user, name, value,) {
         .replace('{{status}}', status)
         .replace('{{account}}', account)
         .replace('{{user}}', user)
-        .replace('{{name}}', name)
+        .replace('{{name}}', name? `${name} : ` : ``)
         .replace('{{value}}', value);
 
     if (isLog) {
