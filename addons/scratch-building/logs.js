@@ -53,6 +53,9 @@ Scratch.UserSession.load(function(err, user) {
         fs.appendFile(config_myAddon.file_logs, `> Server started. Waiting for cloud data... | ${nowTime}\n`, function(err) {
             if (err) return console.error('Error writing to log file:', err);
         });
+        fs.appendFile(config_myAddon.file_chat, `> Server started. Waiting for cloud data... | ${nowTime}\n`, function(err) {
+            if (err) return console.error('Error writing to log file:', err);
+        });
 
         const projectId = config.projectId;
         const limit = 10;
@@ -125,9 +128,10 @@ Scratch.UserSession.load(function(err, user) {
 process.on('exit', function() {
     const nowTime = formatTime(new Date());
 
-    console.log('\u001b[38;5;38mIndex.js closed. Logs saved to cloud.log.\n\u001b[0m');
+    console.log('\u001b[38;5;38m> addons/scratch-building/logs.js closed. Logs saved to cloud.log.\n\u001b[0m');
     try {
         fs.appendFileSync(config_myAddon.file_logs, `> Received SIGINT. Closing server... | ${nowTime}\n\n`);
+        fs.appendFileSync(config_myAddon.file_chat, `> Received SIGINT. Closing server... | ${nowTime}\n\n`);
     } catch (err) {
         console.error('Error writing to log file:', err);
     }
