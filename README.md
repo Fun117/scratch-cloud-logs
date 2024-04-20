@@ -51,9 +51,11 @@ npm start
 
 ## Scratch Building
 
+This add-on was created to simplify the monitoring of cloud data communication for Scratch Building games.
+
 ### Log
 
-You can monitor the communication of cloud data. You can check if the user has modified the chat information in the Scratch Building game. Currently, only the chat has a feature to confirm if the changes were made by the user.
+You can monitor the communication of cloud data. Currently, the user verification feature is only supported for chat communication.
 
 Log: `logs/scratch-building.log`
 Chat log: `logs/scratch-building-chat.log`
@@ -64,7 +66,7 @@ node addons/scratch-building/logs.js
 
 ### Chat
 
-You can chat specifying a username. However, it's not recommended for gameplay, as it cannot confirm if the sender is the actual user. Use this feature responsibly; we are not responsible if you lose access to the game.
+You can chat specifying a username. While it's possible to impersonate the sender within the game, monitoring API communication allows you to identify whether the sender is the actual user. Therefore, using this feature is not recommended. We cannot take responsibility if using this feature disrupts gameplay.
 
 ```bash
 node addons/scratch-building/chat.js <username>
