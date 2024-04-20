@@ -55,8 +55,8 @@ npm start
 
 You can monitor the communication of cloud data. You can check if the user has modified the chat information in the Scratch Building game. Currently, only the chat has a feature to confirm if the changes were made by the user.
 
-Log: logs/scratch-building.log
-Chat log: logs/scratch-building-chat.log
+Log: `logs/scratch-building.log`
+Chat log: `logs/scratch-building-chat.log`
 
 ```bash
 node addons/scratch-building/logs.js
