@@ -1,9 +1,9 @@
-const { CharToNumberGET } = require('../CharToNumberGET.js');
+const { CharToNumberGET } = require('../../src/CharToNumberGET.js');
 const SelectChat = require('./comps/selectChat.js');
-const ScratchCloudSET = require('../_cloud/set.js');
+const ScratchCloudSET = require('../../src/_cloud/set.js');
 
 if (process.argv.length < 3) {
-    console.error('Usage: node ./src/CharToNumberGET.js <username>');
+    console.error('Usage: node ./addons/scratch-building/chat.js <username>');
     process.exit(1);
 }
 
