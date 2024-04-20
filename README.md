@@ -50,8 +50,10 @@ You can monitor the communication of cloud data. You can confirm whether the cha
 npm start
 ```
 
-## Chat
+# Addons
+
+## Scratch Building / Chat
 
 ```bash
-node src/scratch-building/chat.js <username>
+node ./addons/scratch-building/chat.js <username>
 ```

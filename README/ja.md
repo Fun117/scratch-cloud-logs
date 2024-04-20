@@ -49,7 +49,9 @@ npm start
 npm start
 ```
 
-## チャット
+# アドオン
+
+## Scratch Building / チャット
 ```bash
-node src/scratch-building/chat.js <ユーザー名>
+node ./addons/scratch-building/chat.js <ユーザー名>
 ```
