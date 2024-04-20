@@ -26,7 +26,17 @@ async function fetchCloudData(projectId, limit, offset) {
         const response = await axios.get(url);
         return response.data;
     } catch (error) {
-        console.error('Error fetching cloud data:', error);
+        if (error.response) {
+            // サーバーからのレスポンスがあるが、2xx ステータスコード以外
+            console.error('Error fetching cloud data. Server responded with:', error.response.data);
+        } else if (error.request) {
+            // レスポンスがない場合、リクエストが失敗したとき
+            console.error('Error fetching cloud data. No response received:', error.request);
+        } else {
+            // 何らかのその他のエラーが発生したとき
+            console.error('Error fetching cloud data:', error.message);
+        }
+        console.error('Request config:', error.config);
         return null;
     }
 }
