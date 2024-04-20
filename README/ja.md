@@ -67,3 +67,13 @@ node addons/scratch-building/logs.js
 ```bash
 node addons/scratch-building/chat.js <username>
 ```
+
+### ログのカスタマイズ
+
+設定ファイル `addons/scratch-building/_config.js` で設定されている `LogFormat` をカスタマイズすることで表示を自由に調整できます。
+
+- **LogFormat**：サーバーに出力する標準ログのフォーマットです。色を含むログの設定を行います。
+- **LogFormatWarn**：サーバーに出力する警告ログのフォーマットです。警告レベルのログの設定を行います。
+- **LogFormat_noColor**：色なしのログのフォーマットです。色を除いたログの設定を行います。
+
+これらの設定を使用して、ログの内容や表示形式を独自にカスタマイズすることが可能です。

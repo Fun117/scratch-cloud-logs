@@ -71,3 +71,13 @@ You can chat specifying a username. While it's possible to impersonate the sende
 ```bash
 node addons/scratch-building/chat.js <username>
 ```
+
+### Customizing Logs
+
+You can customize the display by adjusting the `LogFormat` set in the configuration file `addons/scratch-building/_config.js`.
+
+- **LogFormat**: Defines the format for standard server logs, including color configurations.
+- **LogFormatWarn**: Specifies the format for warning logs, handling logs at a warning level.
+- **LogFormat_noColor**: Sets the format for logs without colors, excluding any color configurations.
+
+Utilize these settings to tailor the content and presentation of your logs to your needs.

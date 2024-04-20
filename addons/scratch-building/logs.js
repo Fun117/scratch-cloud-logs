@@ -21,6 +21,36 @@ function formatTime(date) {
     return `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
 }
 
+function FormatLog(isLog, type, time, status, account, user, name, value,) {
+    if (type==='warn'){
+        customFormat = config_myAddon.LogFormatWarn
+    } else {
+        customFormat = config_myAddon.LogFormat
+    }
+    let logMessage = customFormat
+        .replace('{{time}}', time)
+        .replace('{{status}}', status)
+        .replace('{{account}}', account)
+        .replace('{{user}}', user)
+        .replace('{{name}}', name)
+        .replace('{{value}}', value);
+
+    customFormat = config_myAddon.LogFormat_noColor
+    let logMessage_noColor = customFormat
+        .replace('{{time}}', time)
+        .replace('{{status}}', status)
+        .replace('{{account}}', account)
+        .replace('{{user}}', user)
+        .replace('{{name}}', name)
+        .replace('{{value}}', value);
+
+    if (isLog) {
+        console.log(logMessage);
+    }
+
+    return logMessage_noColor;
+}
+
 async function fetchCloudData(projectId, limit, offset) {
     const url = `https://clouddata.scratch.mit.edu/logs?projectid=${projectId}&limit=${limit}&offset=${offset}`;
     try {
@@ -92,28 +122,79 @@ Scratch.UserSession.load(function(err, user) {
                     const decryptedValue_chatValue = decryptedValue_chatId_.text;
 
                     if (closestEntry.user !== decryptedValue_username) {
-                        console.log(`\u001b[38;5;42m[${currentTime}]\u001b[0m \u001b[38;5;220m[400] \u001b[38;5;208m${decryptedValue_username} (account: ${closestEntry.user}) / ${closestEntry.name} : ${closestEntry.value}\u001b[0m`);
+                        var formatLog = FormatLog(
+                            true,
+                            'warn',
+                            currentTime,
+                            '400',
+                            `(account: ${closestEntry.user})`,
+                            decryptedValue_username,
+                            closestEntry.name,
+                            closestEntry.value,
+                        );
 
-                        fs.appendFile(config_myAddon.file_logs, `[${currentTime}] [400] ${decryptedValue_username} (account: ${closestEntry.user}) / ${closestEntry.name} : ${closestEntry.value}\n`, function(err) {
+                        // console.log(`\u001b[38;5;42m[${currentTime}]\u001b[0m \u001b[38;5;220m[400] \u001b[38;5;208m${decryptedValue_username} (account: ${closestEntry.user}) / ${closestEntry.name} : ${closestEntry.value}\u001b[0m`);
+                        fs.appendFile(config_myAddon.file_logs, `${formatLog}\n`, function(err) {
                             if (err) return console.error('Error writing to log file:', err);
                         });
-                        fs.appendFile(config_myAddon.file_chat, `[${currentTime}] [400] ${decryptedValue_username} (account: ${closestEntry.user}) / ${decryptedValue_chatValue}\n`, function(err) {
+
+                        var formatLog = FormatLog(
+                            false,
+                            'warn',
+                            currentTime,
+                            '400',
+                            `（${closestEntry.user}）`,
+                            decryptedValue_username,
+                            '',
+                            decryptedValue_chatValue,
+                        );
+                        fs.appendFile(config_myAddon.file_chat, `${formatLog}\n`, function(err) {
                             if (err) return console.error('Error writing to log file:', err);
                         });
                     } else {
-                        console.log(`\u001b[38;5;42m[${currentTime}]\u001b[0m \u001b[38;5;76m[200]\u001b[0m ${closestEntry.user} / ${closestEntry.name} : ${closestEntry.value}`);
+                        // console.log(`\u001b[38;5;42m[${currentTime}]\u001b[0m \u001b[38;5;76m[200]\u001b[0m ${closestEntry.user} / ${closestEntry.name} : ${closestEntry.value}`);
+                        var formatLog = FormatLog(
+                            true,
+                            'log',
+                            currentTime,
+                            '200',
+                            closestEntry.user,
+                            '',
+                            closestEntry.name,
+                            closestEntry.value,
+                        );
 
-                        fs.appendFile(config_myAddon.file_logs, `[${currentTime}] [200] ${closestEntry.user} / ${closestEntry.name} : ${closestEntry.value}\n`, function(err) {
+                        fs.appendFile(config_myAddon.file_logs, `${formatLog}\n`, function(err) {
                             if (err) return console.error('Error writing to log file:', err);
                         });
-                        fs.appendFile(config_myAddon.file_chat, `[${currentTime}] [200] ${closestEntry.user} / ${decryptedValue_chatValue}\n`, function(err) {
+
+                        var formatLog = FormatLog(
+                            false,
+                            'log',
+                            currentTime,
+                            '200',
+                            closestEntry.user,
+                            '',
+                            '',
+                            decryptedValue_chatValue,
+                        );
+                        fs.appendFile(config_myAddon.file_chat, `${formatLog}\n`, function(err) {
                             if (err) return console.error('Error writing to log file:', err);
                         });
                     }
                 } else {
-                    console.log(`\u001b[38;5;42m[${currentTime}]\u001b[0m \u001b[38;5;76m[200]\u001b[0m ${closestEntry.user} / ${closestEntry.name} : ${closestEntry.value}`);
+                    var formatLog = FormatLog(
+                        true,
+                        'log',
+                        currentTime,
+                        '200',
+                        closestEntry.user,
+                        '',
+                        closestEntry.name,
+                        closestEntry.value,
+                    );
 
-                    fs.appendFile(config_myAddon.file_logs, `[${currentTime}] [200] ${closestEntry.user} / ${closestEntry.name} : ${closestEntry.value}\n`, function(err) {
+                    fs.appendFile(config_myAddon.file_logs, `${formatLog}\n`, function(err) {
                         if (err) return console.error('Error writing to log file:', err);
                     });
                 }
