@@ -59,13 +59,31 @@ async function fetchCloudData(projectId, limit, offset) {
     } catch (error) {
         if (error.response) {
             // サーバーからのレスポンスがあるが、2xx ステータスコード以外
-            console.error('Error fetching cloud data. Server responded with:', error.response.data);
+            console.error('Error fetching cloud data.', error.response.data);
+            fs.appendFile(config_myAddon.file_logs, `>>> Error fetching cloud data. | ${nowTime}\n`, function(err) {
+                if (err) return console.error('Error writing to log file:', err);
+            });
+            fs.appendFile(config_myAddon.file_chat, `>>> Error fetching cloud data. Server responded with: | ${nowTime}\n`, function(err) {
+                if (err) return console.error('Error writing to log file:', err);
+            });
         } else if (error.request) {
             // レスポンスがない場合、リクエストが失敗したとき
             console.error('Error fetching cloud data. No response received:', error.request);
+            fs.appendFile(config_myAddon.file_logs, `>>> Error fetching cloud data. No response received | ${nowTime}\n`, function(err) {
+                if (err) return console.error('Error writing to log file:', err);
+            });
+            fs.appendFile(config_myAddon.file_chat, `>>> Error fetching cloud data. No response received | ${nowTime}\n`, function(err) {
+                if (err) return console.error('Error writing to log file:', err);
+            });
         } else {
             // 何らかのその他のエラーが発生したとき
             console.error('Error fetching cloud data:', error.message);
+            fs.appendFile(config_myAddon.file_logs, `>>> Error fetching cloud data. | ${nowTime}\n`, function(err) {
+                if (err) return console.error('Error writing to log file:', err);
+            });
+            fs.appendFile(config_myAddon.file_chat, `>>> Error fetching cloud data. Server responded with: | ${nowTime}\n`, function(err) {
+                if (err) return console.error('Error writing to log file:', err);
+            });
         }
         console.error('Request config:', error.config);
         return null;
@@ -116,7 +134,7 @@ Scratch.UserSession.load(function(err, user) {
         
             if (closestEntry) {
                 if (closestEntry.name === '☁ chat') {
-                    const decryptedValue_username = NumberToCharGET('scratch_username', closestEntry.value.substring(0, 20)); // 復号化
+                    const decryptedValue_username = NumberToCharGET('scratch_username', closestEntry.value.substring(0, 40)); // 復号化
                     const decryptedValue_chatId = closestEntry.value.substring(40);
                     const decryptedValue_chatId_ = chatConfig.menuOptions.find(option => option.number === decryptedValue_chatId);
                     const decryptedValue_chatValue = decryptedValue_chatId_.text;
